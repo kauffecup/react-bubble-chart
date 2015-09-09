@@ -40,10 +40,10 @@ ReactBubbleChartD3.create = function (el, props) {
   // color range is just an array of the hex values
   // color legend is an array of the color/text objects
   var colorLegend = props.colorLegend || [];
-  colorRange = colorLegend.slice(0).reverse().map(c =>
+  colorRange = colorLegend.map(c =>
     typeof c === 'string' ? c : c.color
   );
-  colorLegend = colorLegend.map(c =>
+  colorLegend = colorLegend.slice(0).reverse().map(c =>
     typeof c === 'string' ? {color: c} : c
   );
 

@@ -28,12 +28,12 @@ import ReactBubbleChart from 'react-bubble-chart';
 import Actions          from '../Actions';
 
 var colorLegend = [
-  // blues from dark to light
-  {color: "#08306b", text: 'Positive'}, "#08519c",  "#2171b5", "#4292c6", "#6baed6", "#9ecae1", "#c6dbef", "#deebf7",
+  //reds from dark to light
+  {color: "#67000d", text: 'Negative'}, "#a50f15", "#cb181d", "#ef3b2c", "#fb6a4a", "#fc9272", "#fcbba1", "#fee0d2",
   //neutral grey
   {color: "#f0f0f0", text: 'Neutral'},
-  // reds from light to dark
-  "#fee0d2", "#fcbba1", "#fc9272", "#fb6a4a", "#ef3b2c", "#cb181d", "#a50f15", {color: "#67000d", text: 'Negative'}
+  // blues from light to dark
+  "#deebf7", "#c6dbef", "#9ecae1", "#6baed6", "#4292c6", "#2171b5", "#08519c", {color: "#08306b", text: 'Positive'}
 ];
 
 class BubbleChart extends React.Component {
