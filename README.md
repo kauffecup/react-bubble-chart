@@ -5,6 +5,13 @@ updating data sets.
 
 ![gif](http://i.imgur.com/OQEdgOW.gif)
 
+Here's a [blog post](http://www.jkaufman.io/react-d3-love/) I wrote on this.
+
+For a live demo, head on over to
+[Election Insights](http://electioninsights.mybluemix.net/). The code for that
+is [here](https://github.com/IBM-Bluemix/election-insights), and my blog post
+about it is [here](http://www.jkaufman.io/election-insights/).
+
 ## Installation
 
 ```sh

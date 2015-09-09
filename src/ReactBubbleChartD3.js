@@ -125,7 +125,7 @@ ReactBubbleChartD3.update = function (el, props) {
   var data = props.data;
   if (!data) return;
   
-  // define a color scale for our sentiment analysis
+  // define a color scale for our colorValues
   var color = d3.scale.quantize()
     .domain([
       props.fixedDomain ? props.fixedDomain.min : d3.min(data, d => d.colorValue),
@@ -139,9 +139,9 @@ ReactBubbleChartD3.update = function (el, props) {
 
   // assign new data to existing DOM for circles and labels
   var circles = svg.selectAll('circle')
-    .data(nodes, (d) => 'g' + (d.displayText || d._id));
+    .data(nodes, (d) => 'g' + d._id);
   var labels = html.selectAll('.bubble-label')
-    .data(nodes, (d) => 'g' + (d.displayText || d._id));
+    .data(nodes, (d) => 'g' + d._id);
 
   // update - this is created before enter.append. it only applies to updating nodes.
   // create the transition on the updating elements before the entering elements 
