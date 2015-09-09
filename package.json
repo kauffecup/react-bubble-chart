@@ -1,0 +1,39 @@
+{
+  "name": "react-bubble-chart",
+  "version": "0.0.1",
+  "description": "A React+D3 animated bubble chart",
+  "main": "lib/ReactBubbleChart.js",
+  "dependencies": {
+    "d3": "^3.5.6"
+  },
+  "devDependencies": {
+    "babel": "^5.8.23",
+    "react": "^0.13.3"
+  },
+  "peerDependencies": {
+    "react": ">=0.13.x"
+  },
+  "scripts": {
+    "compile": "babel -d lib/ src/",
+    "prepublish": "npm run compile",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/kauffecup/react-bubble-chart.git"
+  },
+  "keywords": [
+    "react",
+    "d3",
+    "bubble chart"
+  ],
+  "author": {
+    "name": "Jonathan Kaufman",
+    "email": "jdkaufman5@gmail.com"
+  },
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/kauffecup/react-bubble-chart/issues"
+  },
+  "homepage": "https://github.com/kauffecup/react-bubble-chart"
+}

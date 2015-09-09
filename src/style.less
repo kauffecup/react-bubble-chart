@@ -1,0 +1,27 @@
+/* Center the contents of the bubble chart */
+.bubble-chart-container {
+  flex: 1;
+  position: relative;
+  display: flex;
+  user-select: none;
+  justify-content: center;
+
+  .bubble-chart-text {
+    /* Center text in the circle, and hide any overflow */
+    .bubble-label {
+      text-align: center;
+      overflow: hidden;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: space-around;
+      border-radius: 50%;
+      will-change: left, top, height, width;
+      /* Show the overflow when hovering over a label */
+      &:hover {
+        overflow: visible;
+        font-weight: bold;
+      }
+    }
+  }
+}
