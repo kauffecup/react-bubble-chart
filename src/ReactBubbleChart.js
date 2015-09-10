@@ -68,11 +68,11 @@ class ReactBubbleChart extends React.Component {
   }
 
   componentDidMount () {
-    ReactBubbleChartD3.create(this.getDOMNode(), this.getChartState());
+    this.bubbleChart = new ReactBubbleChartD3(this.getDOMNode(), this.getChartState());
   }
 
   componentDidUpdate () {
-    ReactBubbleChartD3.update(this.getDOMNode(), this.getChartState());
+    this.bubbleChart.update(this.getDOMNode(), this.getChartState());
   }
 
   getChartState () {
@@ -87,7 +87,7 @@ class ReactBubbleChart extends React.Component {
   }
 
   componentWillUnmount () {
-    ReactBubbleChartD3.destroy(this.getDOMNode());
+    this.bubbleChart.destroy(this.getDOMNode());
   }
 
   getDOMNode () {

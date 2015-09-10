@@ -16,32 +16,33 @@
 
 import d3 from 'd3';
 
-var ReactBubbleChartD3 = {};
-var svg;
-var html;
-var bubble;
-var diameter;
+/**
+ * Properties defined during construction:
+ *   svg
+ *   html
+ *   bubble
+ *   diameter
+ *   colorRange
+ *   selectedColor
+ *   legendSpacing
+ *   legendRectSize
+ *   selectedTextColor
+ */
+export default class ReactBubbleChartD3 {
 
-var legendRectSize = 18;
-var legendSpacing = 3;
-
-var colorRange;
-
-var selectedColor;
-var selectedTextColor;
-
-export default {
-  create: function (el, props) {
+  constructor(el, props) {
     props = props || {};
 
-    selectedColor = props.selectedColor;
-    selectedTextColor = props.selectedTextColor;
+    this.legendRectSize = 18;
+    this.legendSpacing = 3;
+    this.selectedColor = props.selectedColor;
+    this.selectedTextColor = props.selectedTextColor;
 
     // initialize color legend values and color range values
     // color range is just an array of the hex values
     // color legend is an array of the color/text objects
     var colorLegend = props.colorLegend || [];
-    colorRange = colorLegend.map(c =>
+    this.colorRange = colorLegend.map(c =>
       typeof c === 'string' ? c : c.color
     );
     colorLegend = colorLegend.slice(0).reverse().map(c =>
@@ -49,24 +50,24 @@ export default {
     );
 
     // helper values for positioning
-    diameter = Math.min(el.offsetWidth, el.offsetHeight);
-    var top  = Math.max((el.offsetHeight-diameter)/2, 0);
-    var left = Math.max((el.offsetWidth-diameter)/2, 0);
+    this.diameter = Math.min(el.offsetWidth, el.offsetHeight);
+    var top  = Math.max((el.offsetHeight - this.diameter)/2, 0);
+    var left = Math.max((el.offsetWidth - this.diameter)/2, 0);
 
     // create an <svg> centered vertically in the parent element
     // store a reference to it for later
-    svg = d3.select(el).append('svg')
-      .attr('width', diameter)
-      .attr('height', diameter)
+    this.svg = d3.select(el).append('svg')
+      .attr('width', this.diameter)
+      .attr('height', this.diameter)
       .style('position', 'relative')
       .style('top', top + 'px')   // center vertically
       .attr('class', 'bubble-chart-d3');
 
     // create a <html> centered vertically in the parent element
     // store a reference to it for later
-    html = d3.select(el).append('div')
-      .style('width', diameter + 'px')
-      .style('height', diameter + 'px')
+    this.html = d3.select(el).append('div')
+      .style('width', this.diameter + 'px')
+      .style('height', this.diameter + 'px')
       .style('position', 'absolute')
       .style('top', top + 'px')   // center vertically
       .style('left', left + 'px') // center horizontally
@@ -74,7 +75,7 @@ export default {
 
     // create the legend <svg> block
     // TODO: in a future release maybe this should be optional
-    var legendHeight = colorLegend.length * (legendRectSize + legendSpacing) - legendSpacing;
+    var legendHeight = colorLegend.length * (this.legendRectSize + this.legendSpacing) - this.legendSpacing;
     var legend = d3.select(el).append('svg')
       .attr('class', 'bubble-legend')
       .style('position', 'absolute')
@@ -89,38 +90,38 @@ export default {
       .enter()
       .append('g')
       .attr('class', 'legend-key')
-      .attr('transform', function(d, i) {
-        var height = legendRectSize + legendSpacing;
+      .attr('transform', (d, i) => {
+        var height = this.legendRectSize + this.legendSpacing;
         var vert = i * height;
         return 'translate(' + 0 + ',' + vert + ')';
       });
 
     // for each <g> create a rect and have its color... be the color
     legendKeys.append('rect')
-      .attr('width', legendRectSize)
-      .attr('height', legendRectSize)
+      .attr('width', this.legendRectSize)
+      .attr('height', this.legendRectSize)
       .style('fill', c => c.color)
       .style('stroke', c => c.color);
 
     // add necessary labels to the legend
     legendKeys.append('text')
-      .attr('x', legendRectSize + legendSpacing)
-      .attr('y', legendRectSize - legendSpacing)
+      .attr('x', this.legendRectSize + this.legendSpacing)
+      .attr('y', this.legendRectSize - this.legendSpacing)
       .text(c => c.text);
 
     // create the bubble layout that we will use to position our bubbles
     // TODO: in a future release maybe this should be dynamic so that we can
     // support window resizing and such
-    bubble = d3.layout.pack()
+    this.bubble = d3.layout.pack()
       .sort(null)
-      .size([diameter, diameter])
+      .size([this.diameter, this.diameter])
       .padding(3);
 
     // call update
     this.update(el, props);
-  },
+  }
 
-  update: function (el, props) {
+  update(el, props) {
     var duration = 500;
     var delay = 0;
     var data = props.data;
@@ -132,16 +133,16 @@ export default {
         props.fixedDomain ? props.fixedDomain.min : d3.min(data, d => d.colorValue),
         props.fixedDomain ? props.fixedDomain.max : d3.max(data, d => d.colorValue)
       ])
-      .range(colorRange);
+      .range(this.colorRange);
 
     // generate data with calculated layout values
-    var nodes = bubble.nodes({children: data})
+    var nodes = this.bubble.nodes({children: data})
       .filter((d) => !d.children); // filter out the outer bubble
 
     // assign new data to existing DOM for circles and labels
-    var circles = svg.selectAll('circle')
+    var circles = this.svg.selectAll('circle')
       .data(nodes, (d) => 'g' + d._id);
-    var labels = html.selectAll('.bubble-label')
+    var labels = this.html.selectAll('.bubble-label')
       .data(nodes, (d) => 'g' + d._id);
 
     // update - this is created before enter.append. it only applies to updating nodes.
@@ -154,7 +155,7 @@ export default {
       .attr('transform', (d) => 'translate(' + d.x + ',' + d.y + ')')
       .attr('r', (d) => d.r)
       .style('opacity', 1)
-      .style('fill', d => d.selected ? selectedColor : color(d.colorValue));
+      .style('fill', d => d.selected ? this.selectedColor : color(d.colorValue));
     // for the labels we transition their height, width, left, top, and color
     labels.transition()
       .duration(duration)
@@ -164,7 +165,7 @@ export default {
       .style('left', d =>  d.x - d.r + 'px')
       .style('top', d =>  d.y - d.r + 'px')
       .style('opacity', 1)
-      .style('color', d => d.selected ? selectedTextColor : '');
+      .style('color', d => d.selected ? this.selectedTextColor : '');
 
     // enter - only applies to incoming elements (once emptying data)
     if (data.length) {
@@ -173,7 +174,7 @@ export default {
         .attr('transform', (d) => 'translate(' + d.x + ',' + d.y + ')')
         .attr('r', (d) => 0)
         .attr('class', 'bubble')
-        .style('fill', d => d.selected ? selectedColor : color(d.colorValue))
+        .style('fill', d => d.selected ? this.selectedColor : color(d.colorValue))
         .transition()
         .duration(duration * 1.2)
         .attr('transform', (d) => 'translate(' + d.x + ',' + d.y + ')')
@@ -189,6 +190,7 @@ export default {
         .style('width', d => 2 * d.r + 'px')
         .style('left', d =>  d.x - d.r + 'px')
         .style('top', d =>  d.y - d.r + 'px')
+        .style('color', d => d.selected ? this.selectedTextColor : '')
         .style('opacity', 0)
         .transition()
         .duration(duration * 1.2)
@@ -201,11 +203,11 @@ export default {
       .transition()
       .duration(duration)
       .attr('transform', (d) => {
-        var dy = d.y - diameter/2;
-        var dx = d.x - diameter/2;
+        var dy = d.y - this.diameter/2;
+        var dx = d.x - this.diameter/2;
         var theta = Math.atan2(dy,dx);
-        var destX = diameter * (1 + Math.cos(theta) )/ 2;
-        var destY = diameter * (1 + Math.sin(theta) )/ 2; 
+        var destX = this.diameter * (1 + Math.cos(theta) )/ 2;
+        var destY = this.diameter * (1 + Math.sin(theta) )/ 2; 
         return 'translate(' + destX + ',' + destY + ')'; })
       .attr('r', 0)
       .remove();
@@ -214,23 +216,23 @@ export default {
       .transition()
       .duration(duration)
       .style('top', (d) => {
-        var dy = d.y - diameter/2;
-        var dx = d.x - diameter/2;
+        var dy = d.y - this.diameter/2;
+        var dx = d.x - this.diameter/2;
         var theta = Math.atan2(dy,dx);
-        var destY = diameter * (1 + Math.sin(theta) )/ 2; 
+        var destY = this.diameter * (1 + Math.sin(theta) )/ 2; 
         return destY + 'px'; })
       .style('left', (d) => { 
-        var dy = d.y - diameter/2;
-        var dx = d.x - diameter/2;
+        var dy = d.y - this.diameter/2;
+        var dx = d.x - this.diameter/2;
         var theta = Math.atan2(dy,dx);
-        var destX = diameter * (1 + Math.cos(theta) )/ 2;
+        var destX = this.diameter * (1 + Math.cos(theta) )/ 2;
         return destX + 'px'; })
       .style('opacity', 0)
       .style('width', 0)
       .style('height', 0)
       .remove();
-  },
+  }
 
   /** Any necessary cleanup */
-  destroy: function (el) { }
+  destroy(el) { }
 }
