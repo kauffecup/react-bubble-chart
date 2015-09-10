@@ -23,6 +23,7 @@ import d3 from 'd3';
  *   bubble
  *   diameter
  *   colorRange
+ *   colorLegend
  *   selectedColor
  *   legendSpacing
  *   legendRectSize
@@ -45,7 +46,7 @@ export default class ReactBubbleChartD3 {
     this.colorRange = colorLegend.map(c =>
       typeof c === 'string' ? c : c.color
     );
-    colorLegend = colorLegend.slice(0).reverse().map(c =>
+    this.colorLegend = colorLegend.slice(0).reverse().map(c =>
       typeof c === 'string' ? {color: c} : c
     );
 
@@ -73,9 +74,24 @@ export default class ReactBubbleChartD3 {
       .style('left', left + 'px') // center horizontally
       .attr('class', 'bubble-chart-text');
 
+
+    // create the bubble layout that we will use to position our bubbles
+    // TODO: in a future release maybe this should be dynamic so that we can
+    // support window resizing and such
+    this.bubble = d3.layout.pack()
+      .sort(null)
+      .size([this.diameter, this.diameter])
+      .padding(3);
+
+    // create legend and update
+    this.configureLegend(el);
+    this.update(el, props);
+  }
+
+  configureLegend(el) {
     // create the legend <svg> block
     // TODO: in a future release maybe this should be optional
-    var legendHeight = colorLegend.length * (this.legendRectSize + this.legendSpacing) - this.legendSpacing;
+    var legendHeight = this.colorLegend.length * (this.legendRectSize + this.legendSpacing) - this.legendSpacing;
     var legend = d3.select(el).append('svg')
       .attr('class', 'bubble-legend')
       .style('position', 'absolute')
@@ -86,7 +102,7 @@ export default class ReactBubbleChartD3 {
 
     // for each color in the legend, create a g and set its transform
     var legendKeys = legend.selectAll('.legend-key')
-      .data(colorLegend)
+      .data(this.colorLegend)
       .enter()
       .append('g')
       .attr('class', 'legend-key')
@@ -108,17 +124,6 @@ export default class ReactBubbleChartD3 {
       .attr('x', this.legendRectSize + this.legendSpacing)
       .attr('y', this.legendRectSize - this.legendSpacing)
       .text(c => c.text);
-
-    // create the bubble layout that we will use to position our bubbles
-    // TODO: in a future release maybe this should be dynamic so that we can
-    // support window resizing and such
-    this.bubble = d3.layout.pack()
-      .sort(null)
-      .size([this.diameter, this.diameter])
-      .padding(3);
-
-    // call update
-    this.update(el, props);
   }
 
   update(el, props) {
