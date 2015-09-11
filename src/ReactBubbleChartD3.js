@@ -50,42 +50,40 @@ export default class ReactBubbleChartD3 {
       typeof c === 'string' ? {color: c} : c
     );
 
+    // create an <svg> and <html> element - store a reference to it for later
+    this.svg = d3.select(el).append('svg');
+    this.html = d3.select(el).append('div');
+
+    // create legend and update
+    this.adjustSize(el);
+    this.configureLegend(el);
+    this.update(el, props);
+  }
+
+  adjustSize(el) {
     // helper values for positioning
     this.diameter = Math.min(el.offsetWidth, el.offsetHeight);
     var top  = Math.max((el.offsetHeight - this.diameter)/2, 0);
     var left = Math.max((el.offsetWidth - this.diameter)/2, 0);
 
-    // create an <svg> centered vertically in the parent element
-    // store a reference to it for later
-    this.svg = d3.select(el).append('svg')
-      .attr('width', this.diameter)
+    // center some stuff vertically
+    this.svg.attr('width', this.diameter)
       .attr('height', this.diameter)
       .style('position', 'relative')
       .style('top', top + 'px')   // center vertically
       .attr('class', 'bubble-chart-d3');
-
-    // create a <html> centered vertically in the parent element
-    // store a reference to it for later
-    this.html = d3.select(el).append('div')
-      .style('width', this.diameter + 'px')
+    this.html.style('width', this.diameter + 'px')
       .style('height', this.diameter + 'px')
       .style('position', 'absolute')
       .style('top', top + 'px')   // center vertically
       .style('left', left + 'px') // center horizontally
       .attr('class', 'bubble-chart-text');
 
-
-    // create the bubble layout that we will use to position our bubbles
-    // TODO: in a future release maybe this should be dynamic so that we can
-    // support window resizing and such
+    // create the bubble layout that we will use to position our bubbles\
     this.bubble = d3.layout.pack()
       .sort(null)
       .size([this.diameter, this.diameter])
       .padding(3);
-
-    // create legend and update
-    this.configureLegend(el);
-    this.update(el, props);
   }
 
   configureLegend(el) {
