@@ -20,43 +20,30 @@ import d3 from 'd3';
  * Properties defined during construction:
  *   svg
  *   html
+ *   legend
  *   bubble
  *   diameter
  *   colorRange
  *   colorLegend
  *   selectedColor
  *   legendSpacing
- *   legendRectSize
  *   selectedTextColor
  */
 export default class ReactBubbleChartD3 {
 
   constructor(el, props) {
     props = props || {};
-
-    this.legendRectSize = 18;
     this.legendSpacing = 3;
     this.selectedColor = props.selectedColor;
     this.selectedTextColor = props.selectedTextColor;
 
-    // initialize color legend values and color range values
-    // color range is just an array of the hex values
-    // color legend is an array of the color/text objects
-    var colorLegend = props.colorLegend || [];
-    this.colorRange = colorLegend.map(c =>
-      typeof c === 'string' ? c : c.color
-    );
-    this.colorLegend = colorLegend.slice(0).reverse().map(c =>
-      typeof c === 'string' ? {color: c} : c
-    );
-
     // create an <svg> and <html> element - store a reference to it for later
     this.svg = d3.select(el).append('svg');
     this.html = d3.select(el).append('div');
+    this.legend = d3.select(el).append('svg')
 
     // create legend and update
     this.adjustSize(el);
-    this.configureLegend(el);
     this.update(el, props);
   }
 
@@ -86,45 +73,58 @@ export default class ReactBubbleChartD3 {
       .padding(3);
   }
 
-  configureLegend(el) {
-    // create the legend <svg> block
-    // TODO: in a future release maybe this should be optional
-    var legendHeight = this.colorLegend.length * (this.legendRectSize + this.legendSpacing) - this.legendSpacing;
-    var legend = d3.select(el).append('svg')
-      .attr('class', 'bubble-legend')
+  /** create and configure the legend */
+  configureLegend(el, props) {
+    // initialize color legend values and color range values
+    // color range is just an array of the hex values
+    // color legend is an array of the color/text objects
+    var colorLegend = props.colorLegend || [];
+    this.colorRange = colorLegend.map(c =>
+      typeof c === 'string' ? c : c.color
+    );
+    this.colorLegend = colorLegend.slice(0).reverse().map(c =>
+      typeof c === 'string' ? {color: c} : c
+    );
+
+    var legendRectSize = Math.min((el.offsetHeight - (this.colorLegend.length-1)*this.legendSpacing)/this.colorLegend.length, 18);
+    var legendHeight = this.colorLegend.length * (legendRectSize + this.legendSpacing) - this.legendSpacing;
+    this.legend.attr('class', 'bubble-legend')
       .style('position', 'absolute')
       .style('height', legendHeight + 'px')
       .style('width', '100px')
       .style('top', (el.offsetHeight - legendHeight)/2 + 'px')
       .style('left', 60 + 'px');
 
-    // for each color in the legend, create a g and set its transform
-    var legendKeys = legend.selectAll('.legend-key')
+    // for each color in the legend, remove any existing, then
+    // create a g and set its transform
+    this.legend.selectAll('.legend-key').remove();
+    var legendKeys = this.legend.selectAll('.legend-key')
       .data(this.colorLegend)
       .enter()
       .append('g')
       .attr('class', 'legend-key')
       .attr('transform', (d, i) => {
-        var height = this.legendRectSize + this.legendSpacing;
+        var height = legendRectSize + this.legendSpacing;
         var vert = i * height;
         return 'translate(' + 0 + ',' + vert + ')';
       });
 
     // for each <g> create a rect and have its color... be the color
     legendKeys.append('rect')
-      .attr('width', this.legendRectSize)
-      .attr('height', this.legendRectSize)
+      .attr('width', legendRectSize)
+      .attr('height', legendRectSize)
       .style('fill', c => c.color)
       .style('stroke', c => c.color);
 
     // add necessary labels to the legend
     legendKeys.append('text')
-      .attr('x', this.legendRectSize + this.legendSpacing)
-      .attr('y', this.legendRectSize - this.legendSpacing)
+      .attr('x', legendRectSize + this.legendSpacing)
+      .attr('y', legendRectSize - this.legendSpacing)
       .text(c => c.text);
   }
 
   update(el, props) {
+    this.configureLegend(el, props);
     var duration = 500;
     var delay = 0;
     var data = props.data;
