@@ -51,7 +51,6 @@ export default class ReactBubbleChartD3 {
     // helper values for positioning
     this.diameter = Math.min(el.offsetWidth, el.offsetHeight);
     var top  = Math.max((el.offsetHeight - this.diameter)/2, 0);
-    var left = Math.max((el.offsetWidth - this.diameter)/2, 0);
 
     // center some stuff vertically
     this.svg.attr('width', this.diameter)
@@ -63,7 +62,10 @@ export default class ReactBubbleChartD3 {
       .style('height', this.diameter + 'px')
       .style('position', 'absolute')
       .style('top', top + 'px')   // center vertically
-      .style('left', left + 'px') // center horizontally
+      .style('left', 0)           // center horizontally
+      .style('right', 0)
+      .style('margin-left', 'auto')
+      .style('margin-right', 'auto')
       .attr('class', 'bubble-chart-text');
 
     // create the bubble layout that we will use to position our bubbles\
@@ -124,6 +126,7 @@ export default class ReactBubbleChartD3 {
   }
 
   update(el, props) {
+    this.adjustSize(el);
     this.configureLegend(el, props);
     var duration = 500;
     var delay = 0;
