@@ -138,6 +138,16 @@ whose `selected` property is true.
 Can pass a function that will be called with the data object when that bubble is
 clicked on.
 
+### `smallDiameter`
+
+Can pass a number below which the label div will have the `small` class added.
+defaults to 40
+
+### `mediumDiameter`
+
+Can pass a number below which the label div will have the `medium` class added,
+and above which the `large` class will be added. Defaults to 115.
+
 ## Implementation Inspiration (credit where credit is due).
 
 ### React+D3

@@ -27,7 +27,9 @@ import d3 from 'd3';
  *   colorLegend
  *   selectedColor
  *   legendSpacing
+ *   smallDiameter
  *   textColorRange
+ *   mediumDiameter
  *   selectedTextColor
  */
 export default class ReactBubbleChartD3 {
@@ -37,6 +39,8 @@ export default class ReactBubbleChartD3 {
     this.legendSpacing = 3;
     this.selectedColor = props.selectedColor;
     this.selectedTextColor = props.selectedTextColor;
+    this.smallDiameter = props.smallDiameter || 40;
+    this.mediumDiameter = props.mediumDiameter || 115;
 
     // create an <svg> and <html> element - store a reference to it for later
     this.svg = d3.select(el).append('svg');
@@ -183,7 +187,14 @@ export default class ReactBubbleChartD3 {
       .style('left', d =>  d.x - d.r + 'px')
       .style('top', d =>  d.y - d.r + 'px')
       .style('opacity', 1)
-      .style('color', d => d.selected ? this.selectedTextColor : textColor(d.colorValue));
+      .style('color', d => d.selected ? this.selectedTextColor : textColor(d.colorValue))
+      .attr('class', d => {
+        var size;
+        if (2*d.r < this.smallDiameter) size = 'small';
+        else if (2*d.r < this.mediumDiameter) size = 'medium';
+        else size = 'large';
+        return 'bubble-label ' + size
+      });
 
     // enter - only applies to incoming elements (once emptying data)
     if (data.length) {
@@ -200,7 +211,13 @@ export default class ReactBubbleChartD3 {
         .style('opacity', 1);
       // intialize new labels
       labels.enter().append('div')
-        .attr('class', 'bubble-label')
+        .attr('class', d => {
+          var size;
+          if (2*d.r < this.smallDiameter) size = 'small';
+          else if (2*d.r < this.mediumDiameter) size = 'medium';
+          else size = 'large';
+          return 'bubble-label ' + size
+        })
         .text(d => d.displayText || d._id)
         .on('click', (d,i) => {d3.event.stopPropagation(); props.onClick(d)})
         .style('position', 'absolute')

@@ -62,6 +62,14 @@ import React              from 'react';
 // Can pass a function that will be called with the data object when that bubble is
 // clicked on.
 
+// smallDiameter
+// Can pass a number below which the label div will have the `small` class added.
+// defaults to 40
+
+// mediumDiameter
+// Can pass a number below which the label div will have the `medium` class added,
+// and above which the `large` class will be added. Defaults to 115.
+
 // for more info, see the README
 
 class ReactBubbleChart extends React.Component {
@@ -96,7 +104,9 @@ class ReactBubbleChart extends React.Component {
       fixedDomain: this.props.fixedDomain,
       selectedColor: this.props.selectedColor,
       selectedTextColor: this.props.selectedTextColor,
-      onClick: this.props.onClick || () => {}
+      onClick: this.props.onClick || () => {},
+      smallDiameter: this.props.smallDiameter,
+      mediumDiameter: this.props.mediumDiameter
     }
   }
 

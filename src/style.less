@@ -22,6 +22,18 @@
         overflow: visible;
         font-weight: bold;
       }
+      /* Optional, but recommended - reduce the size of text on medium bubbles */
+      &.medium {
+        font-size: 0.8em;
+      }
+      /* Optional, but recommended - hide the text on small bubbles */
+      &.small {
+        font-size: 0;
+        /* Make sure to unhide the text when hovering */
+        &:hover {
+          font-size: 0.8em;
+        }
+      }
     }
   }
 }

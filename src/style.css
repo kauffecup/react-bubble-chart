@@ -24,3 +24,17 @@
   overflow: visible;
   font-weight: bold;
 }
+
+/* Optional, but recommended - reduce the size of text on medium bubbles */
+.bubble-chart-container .bubble-chart-text .bubble-label.medium {
+  font-size: 0.8em;
+}
+
+/* Optional, but recommended - hide the text on small bubbles */
+.bubble-chart-container .bubble-chart-text .bubble-label.small {
+  font-size: 0;
+}
+/* Make sure to unhide the text when hovering */
+.bubble-chart-container .bubble-chart-text .bubble-label.small:hover {
+  font-size: 0.8em;
+}
