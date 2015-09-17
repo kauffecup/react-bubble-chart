@@ -37,7 +37,7 @@ export default class ReactBubbleChartD3 {
 
   constructor(el, props) {
     props = props || {};
-    this.legendSpacing = props.legendSpacing || 3;
+    this.legendSpacing = typeof props.legendSpacing === 'number' ? props.legendSpacing : 3;
     this.selectedColor = props.selectedColor;
     this.selectedTextColor = props.selectedTextColor;
     this.smallDiameter = props.smallDiameter || 40;
@@ -86,12 +86,13 @@ export default class ReactBubbleChartD3 {
 
   /** create and configure the legend */
   configureLegend(el, props) {
-    var legendRectSize = Math.min((el.offsetHeight - (this.colorLegend.length-1)*this.legendSpacing)/this.colorLegend.length, 18);
+    var legendRectSize = Math.min(((el.offsetHeight-20) - (this.colorLegend.length-1)*this.legendSpacing)/this.colorLegend.length, 18);
     var legendHeight = this.colorLegend.length * (legendRectSize + this.legendSpacing) - this.legendSpacing;
     this.legend.attr('class', 'bubble-legend')
       .style('position', 'absolute')
       .style('height', legendHeight + 'px')
-      .style('width', '100px')
+      .style('width', legendRectSize + 'px')
+      .style('overflow', 'visible')
       .style('top', (el.offsetHeight - legendHeight)/2 + 'px')
       .style('left', 60 + 'px');
 
@@ -118,8 +119,8 @@ export default class ReactBubbleChartD3 {
 
     // add necessary labels to the legend
     legendKeys.append('text')
-      .attr('x', legendRectSize + this.legendSpacing)
-      .attr('y', legendRectSize - this.legendSpacing)
+      .attr('x', legendRectSize + 2)
+      .attr('y', legendRectSize - 4)
       .text(c => c.text);
   }
 
