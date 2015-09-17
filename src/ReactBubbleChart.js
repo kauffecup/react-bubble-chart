@@ -28,6 +28,9 @@ import React              from 'react';
 //    selected: boolean,  // if true will use selectedColor/selectedTextColor for circle/text
 // }
 
+// legend
+// boolean. if true, create and show a legend based on the passed on colors
+
 // colorLegend format:
 // string || {
 //   color: string,
@@ -70,6 +73,9 @@ import React              from 'react';
 // Can pass a number below which the label div will have the `medium` class added,
 // and above which the `large` class will be added. Defaults to 115.
 
+// legendSpacing
+// The number of pixels between blocks in the legend
+
 // for more info, see the README
 
 class ReactBubbleChart extends React.Component {
@@ -106,7 +112,9 @@ class ReactBubbleChart extends React.Component {
       selectedTextColor: this.props.selectedTextColor,
       onClick: this.props.onClick || () => {},
       smallDiameter: this.props.smallDiameter,
-      mediumDiameter: this.props.mediumDiameter
+      mediumDiameter: this.props.mediumDiameter,
+      legendSpacing: this.props.legendSpacing,
+      legend: this.props.legend
     }
   }
 

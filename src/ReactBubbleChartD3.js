@@ -30,22 +30,26 @@ import d3 from 'd3';
  *   smallDiameter
  *   textColorRange
  *   mediumDiameter
+ *   configureLegend
  *   selectedTextColor
  */
 export default class ReactBubbleChartD3 {
 
   constructor(el, props) {
     props = props || {};
-    this.legendSpacing = 3;
+    this.legendSpacing = props.legendSpacing || 3;
     this.selectedColor = props.selectedColor;
     this.selectedTextColor = props.selectedTextColor;
     this.smallDiameter = props.smallDiameter || 40;
     this.mediumDiameter = props.mediumDiameter || 115;
+    this.createLegend = props.legend;
 
     // create an <svg> and <html> element - store a reference to it for later
     this.svg = d3.select(el).append('svg');
     this.html = d3.select(el).append('div');
-    this.legend = d3.select(el).append('svg')
+    if (this.createLegend) {
+      this.legend = d3.select(el).append('svg')
+    }
 
     // create legend and update
     this.adjustSize(el);
@@ -82,20 +86,6 @@ export default class ReactBubbleChartD3 {
 
   /** create and configure the legend */
   configureLegend(el, props) {
-    // initialize color legend values and color range values
-    // color range is just an array of the hex values
-    // color legend is an array of the color/text objects
-    var colorLegend = props.colorLegend || [];
-    this.colorRange = colorLegend.map(c =>
-      typeof c === 'string' ? c : c.color
-    );
-    this.colorLegend = colorLegend.slice(0).reverse().map(c =>
-      typeof c === 'string' ? {color: c} : c
-    );
-    this.textColorRange = colorLegend.map(c =>
-      typeof c === 'string' ? '#000000' : (c.textColor || '#000000')
-    );
-
     var legendRectSize = Math.min((el.offsetHeight - (this.colorLegend.length-1)*this.legendSpacing)/this.colorLegend.length, 18);
     var legendHeight = this.colorLegend.length * (legendRectSize + this.legendSpacing) - this.legendSpacing;
     this.legend.attr('class', 'bubble-legend')
@@ -135,7 +125,22 @@ export default class ReactBubbleChartD3 {
 
   update(el, props) {
     this.adjustSize(el);
-    this.configureLegend(el, props);
+    // initialize color legend values and color range values
+    // color range is just an array of the hex values
+    // color legend is an array of the color/text objects
+    var colorLegend = props.colorLegend || [];
+    this.colorRange = colorLegend.map(c =>
+      typeof c === 'string' ? c : c.color
+    );
+    this.colorLegend = colorLegend.slice(0).reverse().map(c =>
+      typeof c === 'string' ? {color: c} : c
+    );
+    this.textColorRange = colorLegend.map(c =>
+      typeof c === 'string' ? '#000000' : (c.textColor || '#000000')
+    );
+    if (this.createLegend) {
+      this.configureLegend(el, props);
+    }
     var duration = 500;
     var delay = 0;
     var data = props.data;

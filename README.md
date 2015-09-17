@@ -102,6 +102,10 @@ string || {
 }
 ```
 
+### `legend` (optional)
+
+Boolean. If true, create a legend based on the values supplied in `colorLegend`.
+
 ### `fixedDomain` (optional)
 
 Used in tandum with the color legend. If defined, the minimum number corresponds
@@ -126,27 +130,32 @@ String hex value.
 If defined, will use this to color the circle corresponding to the data object
 whose `selected` property is true.
 
-### `selectedTextColor`
+### `selectedTextColor` (optional)
 
 String hex value.
 
 If defined, will use this to color the text corresponding to the data object
 whose `selected` property is true.
 
-### `onClick`
+### `onClick` (optional)
 
 Can pass a function that will be called with the data object when that bubble is
 clicked on.
 
-### `smallDiameter`
+### `smallDiameter` (optional)
 
 Can pass a number below which the label div will have the `small` class added.
 defaults to 40
 
-### `mediumDiameter`
+### `mediumDiameter` (optional)
 
 Can pass a number below which the label div will have the `medium` class added,
 and above which the `large` class will be added. Defaults to 115.
+
+### legendSpacing (optional)
+
+Can specify the number of pixels between the blocks in the legend. Defaults to
+3.
 
 ## Implementation Inspiration (credit where credit is due).
 
