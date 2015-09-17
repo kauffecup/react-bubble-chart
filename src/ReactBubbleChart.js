@@ -31,7 +31,9 @@ import React              from 'react';
 // colorLegend format:
 // string || {
 //   color: string,
-//   text: string used in legend
+//   text: string used in legend,
+//   textColor: string (optional) - if specified will use this for the text color when
+//              over bubbles with that color
 // }
 
 // fixedDomain (optional)

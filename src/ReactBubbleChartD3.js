@@ -27,6 +27,7 @@ import d3 from 'd3';
  *   colorLegend
  *   selectedColor
  *   legendSpacing
+ *   textColorRange
  *   selectedTextColor
  */
 export default class ReactBubbleChartD3 {
@@ -87,6 +88,9 @@ export default class ReactBubbleChartD3 {
     this.colorLegend = colorLegend.slice(0).reverse().map(c =>
       typeof c === 'string' ? {color: c} : c
     );
+    this.textColorRange = colorLegend.map(c =>
+      typeof c === 'string' ? '#000000' : (c.textColor || '#000000')
+    );
 
     var legendRectSize = Math.min((el.offsetHeight - (this.colorLegend.length-1)*this.legendSpacing)/this.colorLegend.length, 18);
     var legendHeight = this.colorLegend.length * (legendRectSize + this.legendSpacing) - this.legendSpacing;
@@ -141,6 +145,14 @@ export default class ReactBubbleChartD3 {
       ])
       .range(this.colorRange);
 
+    // define a color scale for text town
+    var textColor = d3.scale.quantize()
+      .domain([
+        props.fixedDomain ? props.fixedDomain.min : d3.min(data, d => d.colorValue),
+        props.fixedDomain ? props.fixedDomain.max : d3.max(data, d => d.colorValue)
+      ])
+      .range(this.textColorRange)
+
     // generate data with calculated layout values
     var nodes = this.bubble.nodes({children: data})
       .filter((d) => !d.children); // filter out the outer bubble
@@ -171,7 +183,7 @@ export default class ReactBubbleChartD3 {
       .style('left', d =>  d.x - d.r + 'px')
       .style('top', d =>  d.y - d.r + 'px')
       .style('opacity', 1)
-      .style('color', d => d.selected ? this.selectedTextColor : '');
+      .style('color', d => d.selected ? this.selectedTextColor : textColor(d.colorValue));
 
     // enter - only applies to incoming elements (once emptying data)
     if (data.length) {
@@ -196,7 +208,7 @@ export default class ReactBubbleChartD3 {
         .style('width', d => 2 * d.r + 'px')
         .style('left', d =>  d.x - d.r + 'px')
         .style('top', d =>  d.y - d.r + 'px')
-        .style('color', d => d.selected ? this.selectedTextColor : '')
+        .style('color', d => d.selected ? this.selectedTextColor : textColor(d.colorValue))
         .style('opacity', 0)
         .transition()
         .duration(duration * 1.2)

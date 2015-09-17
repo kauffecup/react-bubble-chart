@@ -36,11 +36,11 @@ import Actions          from '../Actions';
 
 var colorLegend = [
   //reds from dark to light
-  {color: "#67000d", text: 'Negative'}, "#a50f15", "#cb181d", "#ef3b2c", "#fb6a4a", "#fc9272", "#fcbba1", "#fee0d2",
+  {color: "#67000d", text: 'Negative', textColor: "#ffffff"}, "#a50f15", "#cb181d", "#ef3b2c", "#fb6a4a", "#fc9272", "#fcbba1", "#fee0d2",
   //neutral grey
   {color: "#f0f0f0", text: 'Neutral'},
   // blues from light to dark
-  "#deebf7", "#c6dbef", "#9ecae1", "#6baed6", "#4292c6", "#2171b5", "#08519c", {color: "#08306b", text: 'Positive'}
+  "#deebf7", "#c6dbef", "#9ecae1", "#6baed6", "#4292c6", "#2171b5", "#08519c", {color: "#08306b", text: 'Positive', textColor: "#ffffff"}
 ];
 
 class BubbleChart extends React.Component {
@@ -96,7 +96,9 @@ text is defined, this value will be shown in the legend.
 ```js
 string || {
   color: string,
-  text: string used in legend
+  text: string used in legend,
+  textColor: string (optional) - if specified will use this for the text color
+             when over bubbles with that color
 }
 ```
 
