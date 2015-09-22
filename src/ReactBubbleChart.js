@@ -114,7 +114,9 @@ class ReactBubbleChart extends React.Component {
       smallDiameter: this.props.smallDiameter,
       mediumDiameter: this.props.mediumDiameter,
       legendSpacing: this.props.legendSpacing,
-      legend: this.props.legend
+      legend: this.props.legend,
+      tooltip: this.props.tooltip,
+      tooltipProps: this.props.tooltipProps
     }
   }
 

@@ -34,7 +34,6 @@ import d3 from 'd3';
  *   selectedTextColor
  */
 export default class ReactBubbleChartD3 {
-
   constructor(el, props) {
     props = props || {};
     this.legendSpacing = typeof props.legendSpacing === 'number' ? props.legendSpacing : 3;
@@ -42,14 +41,14 @@ export default class ReactBubbleChartD3 {
     this.selectedTextColor = props.selectedTextColor;
     this.smallDiameter = props.smallDiameter || 40;
     this.mediumDiameter = props.mediumDiameter || 115;
-    this.createLegend = props.legend;
 
     // create an <svg> and <html> element - store a reference to it for later
     this.svg = d3.select(el).append('svg');
     this.html = d3.select(el).append('div');
-    if (this.createLegend) {
-      this.legend = d3.select(el).append('svg')
-    }
+    this.legend = d3.select(el).append('svg');
+    this.tooltip = d3.select(el)
+      .append('div')
+      .attr('class', 'tooltip');
 
     // create legend and update
     this.adjustSize(el);
@@ -86,6 +85,12 @@ export default class ReactBubbleChartD3 {
 
   /** create and configure the legend */
   configureLegend(el, props) {
+    this.createLegend = props.legend;
+    // for each color in the legend, remove any existing, then
+    // create a g and set its transform
+    this.legend.selectAll('.legend-key').remove();
+    if (!this.createLegend) return;
+
     var legendRectSize = Math.min(((el.offsetHeight-20) - (this.colorLegend.length-1)*this.legendSpacing)/this.colorLegend.length, 18);
     var legendHeight = this.colorLegend.length * (legendRectSize + this.legendSpacing) - this.legendSpacing;
     this.legend.attr('class', 'bubble-legend')
@@ -96,9 +101,6 @@ export default class ReactBubbleChartD3 {
       .style('top', (el.offsetHeight - legendHeight)/2 + 'px')
       .style('left', 60 + 'px');
 
-    // for each color in the legend, remove any existing, then
-    // create a g and set its transform
-    this.legend.selectAll('.legend-key').remove();
     var legendKeys = this.legend.selectAll('.legend-key')
       .data(this.colorLegend)
       .enter()
@@ -124,6 +126,21 @@ export default class ReactBubbleChartD3 {
       .text(c => c.text);
   }
 
+  configureTooltip(el, props) {
+    this.createTooltip = props.tooltip;
+    this.tooltip.selectAll('div').remove();
+    this.tooltip.style('display', 'none');
+    if (!this.createTooltip) return;
+
+    this.tooltipProps = (props.tooltipProps || []).map(tp =>
+      typeof tp === 'string' ? {css: tp, prop: tp, display: tp} : tp
+    );
+    for (var {css, prop} of this.tooltipProps) {
+      this.tooltip.append('div')
+        .attr('class', css);
+    }
+  }
+
   update(el, props) {
     this.adjustSize(el);
     // initialize color legend values and color range values
@@ -139,9 +156,9 @@ export default class ReactBubbleChartD3 {
     this.textColorRange = colorLegend.map(c =>
       typeof c === 'string' ? '#000000' : (c.textColor || '#000000')
     );
-    if (this.createLegend) {
-      this.configureLegend(el, props);
-    }
+    this.configureLegend(el, props);
+    this.configureTooltip(el, props);
+
     var duration = 500;
     var delay = 0;
     var data = props.data;
@@ -226,6 +243,26 @@ export default class ReactBubbleChartD3 {
         })
         .text(d => d.displayText || d._id)
         .on('click', (d,i) => {d3.event.stopPropagation(); props.onClick(d)})
+        .on('mouseover', (d,i) => {
+          if (!this.createLegend) return;
+          for (var {css, prop, display} of this.tooltipProps) {
+            this.tooltip.select('.' + css).html((display ? display + ': ' : '') + d[prop]);
+          }
+          // Fade the popup fill mixing the shape fill with 80% white
+          var fill = color(d.colorValue);
+          var backgroundColor = d3.rgb(
+            d3.rgb(fill).r + 0.8 * (255 - d3.rgb(fill).r),
+            d3.rgb(fill).g + 0.8 * (255 - d3.rgb(fill).g),
+            d3.rgb(fill).b + 0.8 * (255 - d3.rgb(fill).b)
+          );
+          this.tooltip.style('display', 'block')
+            .style('background-color', backgroundColor)
+            .style('border-color', fill);
+        })
+        .on('mouseout', (d,i) => {
+          if (!this.createLegend) return;
+          this.tooltip.style('display', 'none');
+        })
         .style('position', 'absolute')
         .style('height', d => 2 * d.r + 'px')
         .style('width', d => 2 * d.r + 'px')

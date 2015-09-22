@@ -43,6 +43,19 @@ var colorLegend = [
   "#deebf7", "#c6dbef", "#9ecae1", "#6baed6", "#4292c6", "#2171b5", "#08519c", {color: "#08306b", text: 'Positive', textColor: "#ffffff"}
 ];
 
+var tooltipProps = [{
+  css: 'symbol',
+  prop: '_id'
+}, {
+  css: 'value',
+  prop: 'value',
+  display: 'Last Value'
+}, {
+  css: 'change',
+  prop: 'colorValue',
+  display: 'Change'
+}];
+
 class BubbleChart extends React.Component {
   render () {
     var data = this.props.data.map(d => ({
@@ -60,6 +73,10 @@ class BubbleChart extends React.Component {
       selectedTextColor="#d9d9d9"
       fixedDomain={{min: -1, max: 1}}
       onClick={Actions.doStuff.bind(Actions)}
+      legend={true}
+      legendSpacing={0}
+      tooltip={true}
+      tooltipProps={tooltipProps}
     />;
   }
 }
@@ -87,6 +104,9 @@ An array of data objects (defined below) used to populate the bubble chart.
    selected: boolean,  // if true will use selectedColor/selectedTextColor for circle/text
 }
 ```
+
+If using the tooltip feature (more on that later), you might include more
+properties in this object.
 
 ### `colorLegend` (required)
 
@@ -123,6 +143,53 @@ dataset.
 }
 ```
 
+### `tooltip` (optional)
+
+If `true`, will create a `<div>` as a sibling of the main `<svg>` chart, whose
+content will be populated by highlighting over one of the bubbles. The class of
+this element is `tooltip`. For now there is no default styling, but in a future
+release there might be. Some example styling can be found in the style files
+under src.
+
+### `tooltipProps` (optional)
+
+This is where you configure what is populated (and from where) in the tooltip.
+This is an array of objects or strings. The objects take three properties -
+`css`, `prop`, and `display` (optional). If you use a string instead of an
+object, that strings values will be used for all three.
+
+For each object in this array, we create a `<div>` whose class is specified by
+`css`. `prop` specifies what property of the data object to display in the
+tooltip. `display` (if specified) will prepend the string with `Value: `, if
+unspecified, nothing is prepended.
+
+Example:
+
+```js
+var tooltipProps = [
+  'mattDamon'
+, {
+  css: 'value',
+  prop: 'value'
+}, {
+  css: 'change',
+  prop: 'colorValue',
+  display: 'Change'
+}];
+```
+
+This would make our tooltip look like:
+
+```html
+<div class="tooltip">
+  <div class="mattDamon">data.mattDamon</div>
+  <div class="value">data.value</div>
+  <div class="change">Change: data.colorValue</div>
+</div>
+```
+
+Where `data` is the data object we're mousing over.
+
 ### `selectedColor` (optional)
 
 String hex value.
@@ -154,8 +221,8 @@ and above which the `large` class will be added. Defaults to 115.
 
 ### legendSpacing (optional)
 
-Can specify the number of pixels between the blocks in the legend. Defaults to
-3.
+Can specify the number of pixels between the blocks in the legend. Defaults
+to 3.
 
 ## Implementation Inspiration (credit where credit is due).
 

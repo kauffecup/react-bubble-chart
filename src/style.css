@@ -7,6 +7,16 @@
   justify-content: center;
 }
 
+/* Give the tooltip a fixed position and a border so that we can style it */
+.bubble-chart-container .tooltip {
+  position: absolute;
+  top: 10%;
+  right: 30%;
+  border-radius: 5px;
+  border: 3px solid;
+  padding: 5px;
+}
+
 /* Center text in the circle, and hide any overflow */
 .bubble-chart-container .bubble-chart-text .bubble-label {
   text-align: center;
