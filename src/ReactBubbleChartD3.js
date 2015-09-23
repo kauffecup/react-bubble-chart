@@ -55,6 +55,9 @@ export default class ReactBubbleChartD3 {
     this.update(el, props);
   }
 
+  /**
+   * Set this.diameter and this.bubble, also size this.svg and this.html
+   */
   adjustSize(el) {
     // helper values for positioning
     this.diameter = Math.min(el.offsetWidth, el.offsetHeight);
@@ -83,7 +86,9 @@ export default class ReactBubbleChartD3 {
       .padding(3);
   }
 
-  /** create and configure the legend */
+  /**
+   * Create and configure the legend
+   */
   configureLegend(el, props) {
     this.createLegend = props.legend;
     // for each color in the legend, remove any existing, then
@@ -126,21 +131,36 @@ export default class ReactBubbleChartD3 {
       .text(c => c.text);
   }
 
+  /**
+   * Create and configure the tooltip
+   */
   configureTooltip(el, props) {
     this.createTooltip = props.tooltip;
+    // remove all existing divs from the tooltip
     this.tooltip.selectAll('div').remove();
+    // intialize the styling
     this.tooltip.style('display', 'none');
     if (!this.createTooltip) return;
 
+    // normalize the prop formats
     this.tooltipProps = (props.tooltipProps || []).map(tp =>
       typeof tp === 'string' ? {css: tp, prop: tp, display: tp} : tp
     );
+    // create a div for each of the tooltip props
     for (var {css, prop} of this.tooltipProps) {
       this.tooltip.append('div')
         .attr('class', css);
     }
   }
 
+  /**
+   * This is where the magic happens.
+   * Update the tooltip and legend.
+   * Set up and execute transitions of existing bubbles to new size/location/color.
+   * Create and initialize new bubbles.
+   * Remove old bubbles.
+   * Maintain consistencies between this.svg and this.html
+   */
   update(el, props) {
     this.adjustSize(el);
     // initialize color legend values and color range values
@@ -202,7 +222,9 @@ export default class ReactBubbleChartD3 {
       .style('opacity', 1)
       .style('fill', d => d.selected ? this.selectedColor : color(d.colorValue));
     // for the labels we transition their height, width, left, top, and color
-    labels.transition()
+    labels
+      .on('mouseover', this._tooltipMouseOver.bind(this, color))
+      .transition()
       .duration(duration)
       .delay((d, i) => {delay = i * 7; return delay;})
       .style('height', d => 2 * d.r + 'px')
@@ -243,26 +265,8 @@ export default class ReactBubbleChartD3 {
         })
         .text(d => d.displayText || d._id)
         .on('click', (d,i) => {d3.event.stopPropagation(); props.onClick(d)})
-        .on('mouseover', (d,i) => {
-          if (!this.createTooltip) return;
-          for (var {css, prop, display} of this.tooltipProps) {
-            this.tooltip.select('.' + css).html((display ? display + ': ' : '') + d[prop]);
-          }
-          // Fade the popup fill mixing the shape fill with 80% white
-          var fill = color(d.colorValue);
-          var backgroundColor = d3.rgb(
-            d3.rgb(fill).r + 0.8 * (255 - d3.rgb(fill).r),
-            d3.rgb(fill).g + 0.8 * (255 - d3.rgb(fill).g),
-            d3.rgb(fill).b + 0.8 * (255 - d3.rgb(fill).b)
-          );
-          this.tooltip.style('display', 'block')
-            .style('background-color', backgroundColor)
-            .style('border-color', fill);
-        })
-        .on('mouseout', (d,i) => {
-          if (!this.createTooltip) return;
-          this.tooltip.style('display', 'none');
-        })
+        .on('mouseover', this._tooltipMouseOver.bind(this, color))
+        .on('mouseout', this._tooltipMouseOut.bind(this))
         .style('position', 'absolute')
         .style('height', d => 2 * d.r + 'px')
         .style('width', d => 2 * d.r + 'px')
@@ -309,6 +313,35 @@ export default class ReactBubbleChartD3 {
       .style('width', 0)
       .style('height', 0)
       .remove();
+  }
+
+  /**
+   * On mouseover of a bubble, populate the tooltip with that elements info
+   * (if this.createTooltip is true of course)
+   */
+  _tooltipMouseOver(color, d, i) {
+    if (!this.createTooltip) return;
+    for (var {css, prop, display} of this.tooltipProps) {
+      this.tooltip.select('.' + css).html((display ? display + ': ' : '') + d[prop]);
+    }
+    // Fade the popup fill mixing the shape fill with 80% white
+    var fill = color(d.colorValue);
+    var backgroundColor = d3.rgb(
+      d3.rgb(fill).r + 0.8 * (255 - d3.rgb(fill).r),
+      d3.rgb(fill).g + 0.8 * (255 - d3.rgb(fill).g),
+      d3.rgb(fill).b + 0.8 * (255 - d3.rgb(fill).b)
+    );
+    this.tooltip.style('display', 'block')
+      .style('background-color', backgroundColor)
+      .style('border-color', fill);
+  }
+
+  /**
+   * On tooltip mouseout, hide the tooltip.
+   */
+  _tooltipMouseOut(d, i) {
+    if (!this.createTooltip) return;
+    this.tooltip.style('display', 'none');
   }
 
   /** Any necessary cleanup */
