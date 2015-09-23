@@ -147,9 +147,8 @@ dataset.
 
 If `true`, will create a `<div>` as a sibling of the main `<svg>` chart, whose
 content will be populated by highlighting over one of the bubbles. The class of
-this element is `tooltip`. For now there is no default styling, but in a future
-release there might be. Some example styling can be found in the style files
-under src.
+this element is `tooltip`. For now all of the styling is handled by this module,
+not by CSS.
 
 ### `tooltipProps` (optional)
 

@@ -48,8 +48,11 @@ export default class ReactBubbleChartD3 {
     this.legend = d3.select(el).append('svg');
     this.tooltip = d3.select(el)
       .append('div')
-      .attr('class', 'tooltip');
-
+      .attr('class', 'tooltip')
+      .style('position', 'absolute')
+      .style('border-radius', '5px')
+      .style('border', '3px solid')
+      .style('padding', '5px');
     // create legend and update
     this.adjustSize(el);
     this.update(el, props);
