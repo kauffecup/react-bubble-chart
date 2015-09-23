@@ -244,7 +244,7 @@ export default class ReactBubbleChartD3 {
         .text(d => d.displayText || d._id)
         .on('click', (d,i) => {d3.event.stopPropagation(); props.onClick(d)})
         .on('mouseover', (d,i) => {
-          if (!this.createLegend) return;
+          if (!this.createTooltip) return;
           for (var {css, prop, display} of this.tooltipProps) {
             this.tooltip.select('.' + css).html((display ? display + ': ' : '') + d[prop]);
           }
@@ -260,7 +260,7 @@ export default class ReactBubbleChartD3 {
             .style('border-color', fill);
         })
         .on('mouseout', (d,i) => {
-          if (!this.createLegend) return;
+          if (!this.createTooltip) return;
           this.tooltip.style('display', 'none');
         })
         .style('position', 'absolute')
