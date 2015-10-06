@@ -3,14 +3,12 @@
   "version": "0.2.1",
   "description": "A React+D3 animated bubble chart",
   "main": "lib/ReactBubbleChart.js",
-  "dependencies": {
-    "d3": "^3.5.6"
-  },
   "devDependencies": {
     "babel": "^5.8.23",
     "react": "^0.13.3"
   },
   "peerDependencies": {
+    "d3": ">=3.5.x",
     "react": ">=0.13.x"
   },
   "scripts": {
