@@ -43,9 +43,20 @@ export default class ReactBubbleChartD3 {
     this.mediumDiameter = props.mediumDiameter || 115;
 
     // create an <svg> and <html> element - store a reference to it for later
-    this.svg = d3.select(el).append('svg');
-    this.html = d3.select(el).append('div');
-    this.legend = d3.select(el).append('svg');
+    this.svg = d3.select(el).append('svg')
+      .attr('class', 'bubble-chart-d3')
+      .style('overflow', 'visible');
+    this.html = d3.select(el).append('div')
+      .attr('class', 'bubble-chart-text')
+      .style('position', 'absolute')
+      .style('left', 0)           // center horizontally
+      .style('right', 0)
+      .style('margin-left', 'auto')
+      .style('margin-right', 'auto');
+    this.legend = d3.select(el).append('svg')
+      .attr('class', 'bubble-legend')
+      .style('overflow', 'visible')
+      .style('position', 'absolute');
     this.tooltip = this.html.append('div')
       .attr('class', 'tooltip')
       .style('position', 'absolute')
@@ -65,22 +76,14 @@ export default class ReactBubbleChartD3 {
     // helper values for positioning
     this.diameter = Math.min(el.offsetWidth, el.offsetHeight);
     var top  = Math.max((el.offsetHeight - this.diameter)/2, 0);
-
     // center some stuff vertically
     this.svg.attr('width', this.diameter)
       .attr('height', this.diameter)
       .style('position', 'relative')
-      .style('top', top + 'px')   // center vertically
-      .attr('class', 'bubble-chart-d3');
+      .style('top', top + 'px');   // center vertically
     this.html.style('width', this.diameter + 'px')
       .style('height', this.diameter + 'px')
-      .style('position', 'absolute')
-      .style('top', top + 'px')   // center vertically
-      .style('left', 0)           // center horizontally
-      .style('right', 0)
-      .style('margin-left', 'auto')
-      .style('margin-right', 'auto')
-      .attr('class', 'bubble-chart-text');
+      .style('top', top + 'px');   // center vertically;
 
     // create the bubble layout that we will use to position our bubbles\
     this.bubble = d3.layout.pack()
@@ -101,11 +104,8 @@ export default class ReactBubbleChartD3 {
 
     var legendRectSize = Math.min(((el.offsetHeight-20) - (this.colorLegend.length-1)*this.legendSpacing)/this.colorLegend.length, 18);
     var legendHeight = this.colorLegend.length * (legendRectSize + this.legendSpacing) - this.legendSpacing;
-    this.legend.attr('class', 'bubble-legend')
-      .style('position', 'absolute')
-      .style('height', legendHeight + 'px')
+    this.legend.style('height', legendHeight + 'px')
       .style('width', legendRectSize + 'px')
-      .style('overflow', 'visible')
       .style('top', (el.offsetHeight - legendHeight)/2 + 'px')
       .style('left', 60 + 'px');
 
