@@ -77,6 +77,7 @@ class BubbleChart extends React.Component {
       legendSpacing={0}
       tooltip={true}
       tooltipProps={tooltipProps}
+      tooltipFunc={tooltipFunc}
     />;
   }
 }
@@ -188,6 +189,12 @@ This would make our tooltip look like:
 ```
 
 Where `data` is the data object we're mousing over.
+
+### `tooltipFunc` (optional)
+
+A function that is passed the domNode, the d3 data object, and the color of the
+tooltip on hover. Can be used if you want to do fancier dom stuff than just set
+some text values.
 
 ### `selectedColor` (optional)
 

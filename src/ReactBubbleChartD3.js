@@ -139,6 +139,7 @@ export default class ReactBubbleChartD3 {
    */
   configureTooltip(el, props) {
     this.createTooltip = props.tooltip;
+    this.tooltipFunc = props.tooltipFunc;
     // remove all existing divs from the tooltip
     this.tooltip.selectAll('div').remove();
     // intialize the styling
@@ -337,6 +338,9 @@ export default class ReactBubbleChartD3 {
     this.tooltip.style('display', 'block');
 
     var tooltipNode = this.tooltip.node();
+    if (this.tooltipFunc) {
+      this.tooltipFunc(tooltipNode, d, fill)
+    }
     var width = tooltipNode.offsetWidth + 1; // +1 for rounding reasons
     var height = tooltipNode.offsetHeight;
     var buffer = 5;

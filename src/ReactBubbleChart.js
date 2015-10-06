@@ -51,6 +51,28 @@ import React              from 'react';
 //   max: number
 // }
 
+// tooltip (optional)
+// If `true`, will create a `<div>` as a sibling of the main `<svg>` chart, whose
+// content will be populated by highlighting over one of the bubbles. The class of
+// this element is `tooltip`. For now all of the styling is handled by this module,
+// not by CSS.
+
+// tooltipProps (optional)
+// This is where you configure what is populated (and from where) in the tooltip.
+// This is an array of objects or strings. The objects take three properties -
+// `css`, `prop`, and `display` (optional). If you use a string instead of an
+// object, that strings values will be used for all three.
+
+// For each object in this array, we create a `<div>` whose class is specified by
+// `css`. `prop` specifies what property of the data object to display in the
+// tooltip. `display` (if specified) will prepend the string with `Value: `, if
+// unspecified, nothing is prepended.
+
+// tooltipFunc (optional)
+// A function that is passed the domNode, the d3 data object, and the color of the
+// tooltip on hover. Can be used if you want to do fancier dom stuff than just set
+// some text values.
+
 // selectedColor
 // String hex value.
 // If defined, will use this to color the circle corresponding to the data object
@@ -116,7 +138,8 @@ class ReactBubbleChart extends React.Component {
       legendSpacing: this.props.legendSpacing,
       legend: this.props.legend,
       tooltip: this.props.tooltip,
-      tooltipProps: this.props.tooltipProps
+      tooltipProps: this.props.tooltipProps,
+      tooltipFunc: this.props.tooltipFunc
     }
   }
 
