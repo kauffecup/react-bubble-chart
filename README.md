@@ -109,7 +109,7 @@ An array of data objects (defined below) used to populate the bubble chart.
 If using the tooltip feature (more on that later), you might include more
 properties in this object.
 
-### `colorLegend` (required)
+### `colorLegend` (optional)
 
 An array of strings (hex values) or objects that define a color and text. If
 text is defined, this value will be shown in the legend.
@@ -122,6 +122,11 @@ string || {
              when over bubbles with that color
 }
 ```
+
+If this is left undefined everything will render black. But fear not! we add
+the css class `bubble` to all... bubbles and `bubble leaf` if it has no
+children. This way if you want all bubbles to be styled the same way you can do
+so with just css instead of defining a color legend array.
 
 ### `legend` (optional)
 

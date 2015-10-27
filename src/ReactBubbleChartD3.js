@@ -251,7 +251,7 @@ export default class ReactBubbleChartD3 {
       circles.enter().append('circle')
         .attr('transform', (d) => 'translate(' + d.x + ',' + d.y + ')')
         .attr('r', (d) => 0)
-        .attr('class', 'bubble')
+        .attr('class', d => d.children ? 'bubble' : 'bubble leaf')
         .style('fill', d => d.selected ? this.selectedColor : color(d.colorValue))
         .transition()
         .duration(duration * 1.2)

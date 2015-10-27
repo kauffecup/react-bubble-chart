@@ -32,13 +32,18 @@ import ReactDOM           from 'react-dom';
 // legend
 // boolean. if true, create and show a legend based on the passed on colors
 
-// colorLegend format:
+// colorLegend (optional)
+// an array of:
 // string || {
 //   color: string,
 //   text: string used in legend,
 //   textColor: string (optional) - if specified will use this for the text color when
 //              over bubbles with that color
 // }
+// If this is left undefined everything will render black. But fear not! we add
+// the css class `bubble` to all... bubbles and `bubble leaf` if it has no
+// children. This way if you want all bubbles to be styled the same way you can do
+// so with just css instead of defining a color legend array.
 
 // fixedDomain (optional)
 // Used in tandum with the color legend. If defined, the minimum number corresponds
