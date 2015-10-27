@@ -9,7 +9,8 @@
   },
   "peerDependencies": {
     "d3": ">=3.5.x",
-    "react": ">=0.13.x"
+    "react": ">=0.14.x",
+    "react-dom": ">=0.14.x"
   },
   "scripts": {
     "compile": "babel -d lib/ src/",

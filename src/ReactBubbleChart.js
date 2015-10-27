@@ -16,6 +16,7 @@
 
 import ReactBubbleChartD3 from './ReactBubbleChartD3';
 import React              from 'react';
+import ReactDOM           from 'react-dom';
 
 // Description of props!
 
@@ -151,7 +152,7 @@ class ReactBubbleChart extends React.Component {
 
   /** Helper method to reference this dom node */
   getDOMNode() {
-    return React.findDOMNode(this);
+    return ReactDOM.findDOMNode(this);
   }
 
   /** On a debounce, adjust the size of our graph area and then update the chart */
