@@ -21,6 +21,7 @@ import ReactDOM           from 'react-dom';
 // Description of props!
 
 // data format:
+// An array of data objects (defined below) used to populate the bubble chart.
 // {
 //    _id: string,        // unique id (required)
 //    value: number,      // used to determine relative size of bubbles (required)
@@ -28,8 +29,20 @@ import ReactDOM           from 'react-dom';
 //    colorValue: number, // used to determine color
 //    selected: boolean,  // if true will use selectedColor/selectedTextColor for circle/text
 // }
+// 
+// Can also be a nested JSON object if you want a nested bubble chart. That would look like:
+// {
+//   _id: string,
+//   children: [
+//     {data object},
+//     {data object},
+//     {
+//       _id: string,
+//       children: [...]
+//     }
+//   ]
 
-// legend
+// legend (optional)
 // boolean. if true, create and show a legend based on the passed on colors
 
 // colorLegend (optional)

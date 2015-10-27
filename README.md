@@ -5,6 +5,8 @@ updating data sets.
 
 ![gif](http://i.imgur.com/OQEdgOW.gif)
 
+![nested](http://i.imgur.com/SmPJkXv.png)
+
 Here's a [blog post](http://www.jkaufman.io/react-d3-love/) I wrote on this.
 
 For a live demo, head on over to
@@ -94,7 +96,25 @@ ReactBubbleChart uses the following props:
 
 ### `data` (required)
 
-An array of data objects (defined below) used to populate the bubble chart.
+An array of data objects (defined below) used to populate the bubble chart. Can
+also be a nested JSON object if you want a nested bubble chart. That would look
+like:
+
+```js
+{
+  _id: string,
+  children: [
+    {data object},
+    {data object},
+    {
+      _id: string,
+      children: [...]
+    }
+  ]
+}
+```
+
+The data objects themselves look like:
 
 ```js
 {

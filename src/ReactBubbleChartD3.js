@@ -205,8 +205,8 @@ export default class ReactBubbleChartD3 {
       .range(this.textColorRange)
 
     // generate data with calculated layout values
-    var nodes = this.bubble.nodes({children: data})
-      .filter((d) => !d.children); // filter out the outer bubble
+    var nodes = this.bubble.nodes(data.length ? {children: data} : data)
+      .filter(d => d.depth); // filter out the outer bubble
 
     // assign new data to existing DOM for circles and labels
     var circles = this.svg.selectAll('circle')
@@ -246,7 +246,7 @@ export default class ReactBubbleChartD3 {
       });
 
     // enter - only applies to incoming elements (once emptying data)
-    if (data.length) {
+    if (nodes.length) {
       // initialize new circles
       circles.enter().append('circle')
         .attr('transform', (d) => 'translate(' + d.x + ',' + d.y + ')')
