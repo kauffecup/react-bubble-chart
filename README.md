@@ -5,7 +5,7 @@ updating data sets.
 
 ![gif](http://i.imgur.com/OQEdgOW.gif)
 
-![nested](http://i.imgur.com/SmPJkXv.png)
+![nested](http://i.imgur.com/PZ43R7w.gif)
 
 Here's a [blog post](http://www.jkaufman.io/react-d3-love/) I wrote on this.
 
