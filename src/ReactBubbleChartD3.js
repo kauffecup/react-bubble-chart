@@ -34,8 +34,7 @@ import d3 from 'd3';
  *   selectedTextColor
  */
 export default class ReactBubbleChartD3 {
-  constructor(el, props) {
-    props = props || {};
+  constructor(el, props = {}) {
     this.legendSpacing = typeof props.legendSpacing === 'number' ? props.legendSpacing : 3;
     this.selectedColor = props.selectedColor;
     this.selectedTextColor = props.selectedTextColor;
@@ -75,7 +74,7 @@ export default class ReactBubbleChartD3 {
   adjustSize(el) {
     // helper values for positioning
     this.diameter = Math.min(el.offsetWidth, el.offsetHeight);
-    var top  = Math.max((el.offsetHeight - this.diameter)/2, 0);
+    const top  = Math.max((el.offsetHeight - this.diameter)/2, 0);
     // center some stuff vertically
     this.svg.attr('width', this.diameter)
       .attr('height', this.diameter)
@@ -102,14 +101,14 @@ export default class ReactBubbleChartD3 {
     this.legend.selectAll('.legend-key').remove();
     if (!this.createLegend) return;
 
-    var legendRectSize = Math.min(((el.offsetHeight-20) - (this.colorLegend.length-1)*this.legendSpacing)/this.colorLegend.length, 18);
-    var legendHeight = this.colorLegend.length * (legendRectSize + this.legendSpacing) - this.legendSpacing;
+    const legendRectSize = Math.min(((el.offsetHeight-20) - (this.colorLegend.length-1)*this.legendSpacing)/this.colorLegend.length, 18);
+    const legendHeight = this.colorLegend.length * (legendRectSize + this.legendSpacing) - this.legendSpacing;
     this.legend.style('height', legendHeight + 'px')
       .style('width', legendRectSize + 'px')
       .style('top', (el.offsetHeight - legendHeight)/2 + 'px')
       .style('left', 60 + 'px');
 
-    var legendKeys = this.legend.selectAll('.legend-key')
+    const legendKeys = this.legend.selectAll('.legend-key')
       .data(this.colorLegend)
       .enter()
       .append('g')
@@ -170,7 +169,7 @@ export default class ReactBubbleChartD3 {
     // initialize color legend values and color range values
     // color range is just an array of the hex values
     // color legend is an array of the color/text objects
-    var colorLegend = props.colorLegend || [];
+    const colorLegend = props.colorLegend || [];
     this.colorRange = colorLegend.map(c =>
       typeof c === 'string' ? c : c.color
     );
@@ -183,13 +182,14 @@ export default class ReactBubbleChartD3 {
     this.configureLegend(el, props);
     this.configureTooltip(el, props);
 
-    var duration = 500;
-    var delay = 0;
-    var data = props.data;
+    const data = props.data;
     if (!data) return;
+
+    const duration = 500;
+    const delay = 0;
     
     // define a color scale for our colorValues
-    var color = d3.scale.quantize()
+    const color = d3.scale.quantize()
       .domain([
         props.fixedDomain ? props.fixedDomain.min : d3.min(data, d => d.colorValue),
         props.fixedDomain ? props.fixedDomain.max : d3.max(data, d => d.colorValue)
@@ -197,7 +197,7 @@ export default class ReactBubbleChartD3 {
       .range(this.colorRange);
 
     // define a color scale for text town
-    var textColor = d3.scale.quantize()
+    const textColor = d3.scale.quantize()
       .domain([
         props.fixedDomain ? props.fixedDomain.min : d3.min(data, d => d.colorValue),
         props.fixedDomain ? props.fixedDomain.max : d3.max(data, d => d.colorValue)
@@ -205,14 +205,14 @@ export default class ReactBubbleChartD3 {
       .range(this.textColorRange)
 
     // generate data with calculated layout values
-    var nodes = this.bubble.nodes(data.length ? {children: data} : data)
+    const nodes = this.bubble.nodes(data.length ? {children: data} : data)
       .filter(d => d.depth); // filter out the outer bubble
 
     // assign new data to existing DOM for circles and labels
-    var circles = this.svg.selectAll('circle')
-      .data(nodes, (d) => 'g' + d._id);
-    var labels = this.html.selectAll('.bubble-label')
-      .data(nodes, (d) => 'g' + d._id);
+    const circles = this.svg.selectAll('circle')
+      .data(nodes, d => 'g' + d._id);
+    const labels = this.html.selectAll('.bubble-label')
+      .data(nodes, d => 'g' + d._id);
 
     // update - this is created before enter.append. it only applies to updating nodes.
     // create the transition on the updating elements before the entering elements 
@@ -220,9 +220,9 @@ export default class ReactBubbleChartD3 {
     // for circles we transition their transform, r, and fill
     circles.transition()
       .duration(duration)
-      .delay((d, i) => {delay = i * 7; return delay;})
-      .attr('transform', (d) => 'translate(' + d.x + ',' + d.y + ')')
-      .attr('r', (d) => d.r)
+      .delay((d, i) => i * 7)
+      .attr('transform', d => 'translate(' + d.x + ',' + d.y + ')')
+      .attr('r', d => d.r)
       .style('opacity', 1)
       .style('fill', d => d.selected ? this.selectedColor : color(d.colorValue));
     // for the labels we transition their height, width, left, top, and color
@@ -230,7 +230,7 @@ export default class ReactBubbleChartD3 {
       .on('mouseover', this._tooltipMouseOver.bind(this, color, el))
       .transition()
       .duration(duration)
-      .delay((d, i) => {delay = i * 7; return delay;})
+      .delay((d, i) => i * 7)
       .style('height', d => 2 * d.r + 'px')
       .style('width', d => 2 * d.r + 'px')
       .style('left', d =>  d.x - d.r + 'px')
@@ -249,14 +249,14 @@ export default class ReactBubbleChartD3 {
     if (nodes.length) {
       // initialize new circles
       circles.enter().append('circle')
-        .attr('transform', (d) => 'translate(' + d.x + ',' + d.y + ')')
-        .attr('r', (d) => 0)
+        .attr('transform', d => 'translate(' + d.x + ',' + d.y + ')')
+        .attr('r', 0)
         .attr('class', d => d.children ? 'bubble' : 'bubble leaf')
         .style('fill', d => d.selected ? this.selectedColor : color(d.colorValue))
         .transition()
         .duration(duration * 1.2)
-        .attr('transform', (d) => 'translate(' + d.x + ',' + d.y + ')')
-        .attr('r', (d) => d.r)
+        .attr('transform', d => 'translate(' + d.x + ',' + d.y + ')')
+        .attr('r', d => d.r)
         .style('opacity', 1);
       // intialize new labels
       labels.enter().append('div')
@@ -268,7 +268,7 @@ export default class ReactBubbleChartD3 {
           return 'bubble-label ' + size
         })
         .text(d => d.displayText || d._id)
-        .on('click', (d,i) => {d3.event.stopPropagation(); props.onClick(d)})
+        .on('click', (d, i) => {d3.event.stopPropagation(); props.onClick(d)})
         .on('mouseover', this._tooltipMouseOver.bind(this, color, el))
         .on('mouseout', this._tooltipMouseOut.bind(this))
         .style('position', 'absolute')
@@ -288,12 +288,12 @@ export default class ReactBubbleChartD3 {
     circles.exit()
       .transition()
       .duration(duration)
-      .attr('transform', (d) => {
-        var dy = d.y - this.diameter/2;
-        var dx = d.x - this.diameter/2;
-        var theta = Math.atan2(dy,dx);
-        var destX = this.diameter * (1 + Math.cos(theta) )/ 2;
-        var destY = this.diameter * (1 + Math.sin(theta) )/ 2; 
+      .attr('transform', d => {
+        const dy = d.y - this.diameter/2;
+        const dx = d.x - this.diameter/2;
+        const theta = Math.atan2(dy,dx);
+        const destX = this.diameter * (1 + Math.cos(theta) )/ 2;
+        const destY = this.diameter * (1 + Math.sin(theta) )/ 2; 
         return 'translate(' + destX + ',' + destY + ')'; })
       .attr('r', 0)
       .remove();
@@ -301,17 +301,17 @@ export default class ReactBubbleChartD3 {
     labels.exit()
       .transition()
       .duration(duration)
-      .style('top', (d) => {
-        var dy = d.y - this.diameter/2;
-        var dx = d.x - this.diameter/2;
-        var theta = Math.atan2(dy,dx);
-        var destY = this.diameter * (1 + Math.sin(theta) )/ 2; 
+      .style('top', d => {
+        const dy = d.y - this.diameter/2;
+        const dx = d.x - this.diameter/2;
+        const theta = Math.atan2(dy,dx);
+        const destY = this.diameter * (1 + Math.sin(theta) )/ 2; 
         return destY + 'px'; })
-      .style('left', (d) => { 
-        var dy = d.y - this.diameter/2;
-        var dx = d.x - this.diameter/2;
-        var theta = Math.atan2(dy,dx);
-        var destX = this.diameter * (1 + Math.cos(theta) )/ 2;
+      .style('left', d => { 
+        const dy = d.y - this.diameter/2;
+        const dx = d.x - this.diameter/2;
+        const theta = Math.atan2(dy,dx);
+        const destX = this.diameter * (1 + Math.cos(theta) )/ 2;
         return destX + 'px'; })
       .style('opacity', 0)
       .style('width', 0)
@@ -329,21 +329,21 @@ export default class ReactBubbleChartD3 {
       this.tooltip.select('.' + css).html((display ? display + ': ' : '') + d[prop]);
     }
     // Fade the popup fill mixing the shape fill with 80% white
-    var fill = color(d.colorValue);
-    var backgroundColor = d3.rgb(
+    const fill = color(d.colorValue);
+    const backgroundColor = d3.rgb(
       d3.rgb(fill).r + 0.8 * (255 - d3.rgb(fill).r),
       d3.rgb(fill).g + 0.8 * (255 - d3.rgb(fill).g),
       d3.rgb(fill).b + 0.8 * (255 - d3.rgb(fill).b)
     );
     this.tooltip.style('display', 'block');
 
-    var tooltipNode = this.tooltip.node();
+    const tooltipNode = this.tooltip.node();
     if (this.tooltipFunc) {
       this.tooltipFunc(tooltipNode, d, fill)
     }
-    var width = tooltipNode.offsetWidth + 1; // +1 for rounding reasons
-    var height = tooltipNode.offsetHeight;
-    var buffer = 5;
+    const width = tooltipNode.offsetWidth + 1; // +1 for rounding reasons
+    const height = tooltipNode.offsetHeight;
+    const buffer = 5;
 
     // calculate where the top is going to be. ideally it is
     // (d.y - height/2) which'll put the tooltip in the middle of the bubble.
