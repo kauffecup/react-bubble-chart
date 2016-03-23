@@ -290,7 +290,7 @@ export default class ReactBubbleChartD3 {
         .transition()
         .duration(duration * 1.2)
         .style('opacity', 1)
-        .style('font-size', d => this.fontSizeFactor ? this.fontSizeFactor *  d.r + 'px' : null);
+        .style('font-size', d => fontFactor ? fontFactor *  d.r + 'px' : null);
     }
 
     // exit - only applies to... exiting elements
