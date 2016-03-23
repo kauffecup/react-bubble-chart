@@ -267,7 +267,7 @@ If the size classes are ommitted in the stylesheet, the font-size defaults to 1e
 
 *Example:* ` <ReactBubbleChart fontSizeFactor={0.5} />`
 
-<img width="100%" alt="Radius-Based Font-Sizes" src="https://cloud.githubusercontent.com/assets/7419015/13993614/4d40e1ca-f0de-11e5-9ec0-3a2e413e73bb.png">
+<img width="100%" alt="fontSizeFactor Example" src="src/assets/fontSizeFactor.png">
 
 ### `duration` (optional)
 
