@@ -32,6 +32,9 @@ import d3 from 'd3';
  *   mediumDiameter
  *   configureLegend
  *   selectedTextColor
+ *   fontSizeFactor
+ *   duration
+ *   delay
  */
 export default class ReactBubbleChartD3 {
   constructor(el, props = {}) {
@@ -188,6 +191,7 @@ export default class ReactBubbleChartD3 {
     const data = props.data;
     if (!data) return;
 
+    const fontFactor = this.fontSizeFactor;
     const duration = this.duration;
     const delay = this.delay;
 
@@ -247,7 +251,8 @@ export default class ReactBubbleChartD3 {
         else size = 'large';
         return 'bubble-label ' + size
       })
-      .style('font-size', d => this.fontSizeFactor ? this.fontSizeFactor *  d.r + 'px' : null);
+      // we can pass in a fontSizeFactor here to set the label font-size as a factor of its corresponding circle's radius; this overrides CSS font-size styles set with the small, medium and large classes
+      .style('font-size', d => fontFactor ? fontFactor *  d.r + 'px' : null);
 
     // enter - only applies to incoming elements (once emptying data)
     if (nodes.length) {
