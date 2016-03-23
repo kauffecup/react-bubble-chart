@@ -32,6 +32,9 @@ import d3 from 'd3';
  *   mediumDiameter
  *   configureLegend
  *   selectedTextColor
+ *   fontSizeFactor
+ *   duration
+ *   delay
  */
 export default class ReactBubbleChartD3 {
   constructor(el, props = {}) {
@@ -40,6 +43,9 @@ export default class ReactBubbleChartD3 {
     this.selectedTextColor = props.selectedTextColor;
     this.smallDiameter = props.smallDiameter || 40;
     this.mediumDiameter = props.mediumDiameter || 115;
+    this.fontSizeFactor = props.fontSizeFactor;
+    this.duration = props.duration === undefined ? 500 : props.duration;
+    this.delay = props.delay === undefined ? 7 : props.delay;
 
     // create an <svg> and <html> element - store a reference to it for later
     this.svg = d3.select(el).append('svg')
@@ -185,9 +191,10 @@ export default class ReactBubbleChartD3 {
     const data = props.data;
     if (!data) return;
 
-    const duration = 500;
-    const delay = 0;
-    
+    const fontFactor = this.fontSizeFactor;
+    const duration = this.duration;
+    const delay = this.delay;
+
     // define a color scale for our colorValues
     const color = d3.scale.quantize()
       .domain([
@@ -215,12 +222,12 @@ export default class ReactBubbleChartD3 {
       .data(nodes, d => 'g' + d._id);
 
     // update - this is created before enter.append. it only applies to updating nodes.
-    // create the transition on the updating elements before the entering elements 
+    // create the transition on the updating elements before the entering elements
     // because enter.append merges entering elements into the update selection
     // for circles we transition their transform, r, and fill
     circles.transition()
       .duration(duration)
-      .delay((d, i) => i * 7)
+      .delay((d, i) => i * delay)
       .attr('transform', d => 'translate(' + d.x + ',' + d.y + ')')
       .attr('r', d => d.r)
       .style('opacity', 1)
@@ -230,7 +237,7 @@ export default class ReactBubbleChartD3 {
       .on('mouseover', this._tooltipMouseOver.bind(this, color, el))
       .transition()
       .duration(duration)
-      .delay((d, i) => i * 7)
+      .delay((d, i) => i * delay)
       .style('height', d => 2 * d.r + 'px')
       .style('width', d => 2 * d.r + 'px')
       .style('left', d =>  d.x - d.r + 'px')
@@ -243,7 +250,9 @@ export default class ReactBubbleChartD3 {
         else if (2*d.r < this.mediumDiameter) size = 'medium';
         else size = 'large';
         return 'bubble-label ' + size
-      });
+      })
+      // we can pass in a fontSizeFactor here to set the label font-size as a factor of its corresponding circle's radius; this overrides CSS font-size styles set with the small, medium and large classes
+      .style('font-size', d => fontFactor ? fontFactor *  d.r + 'px' : null);
 
     // enter - only applies to incoming elements (once emptying data)
     if (nodes.length) {
@@ -280,7 +289,8 @@ export default class ReactBubbleChartD3 {
         .style('opacity', 0)
         .transition()
         .duration(duration * 1.2)
-        .style('opacity', 1);
+        .style('opacity', 1)
+        .style('font-size', d => fontFactor ? fontFactor *  d.r + 'px' : null);
     }
 
     // exit - only applies to... exiting elements
@@ -293,7 +303,7 @@ export default class ReactBubbleChartD3 {
         const dx = d.x - this.diameter/2;
         const theta = Math.atan2(dy,dx);
         const destX = this.diameter * (1 + Math.cos(theta) )/ 2;
-        const destY = this.diameter * (1 + Math.sin(theta) )/ 2; 
+        const destY = this.diameter * (1 + Math.sin(theta) )/ 2;
         return 'translate(' + destX + ',' + destY + ')'; })
       .attr('r', 0)
       .remove();
@@ -305,9 +315,9 @@ export default class ReactBubbleChartD3 {
         const dy = d.y - this.diameter/2;
         const dx = d.x - this.diameter/2;
         const theta = Math.atan2(dy,dx);
-        const destY = this.diameter * (1 + Math.sin(theta) )/ 2; 
+        const destY = this.diameter * (1 + Math.sin(theta) )/ 2;
         return destY + 'px'; })
-      .style('left', d => { 
+      .style('left', d => {
         const dy = d.y - this.diameter/2;
         const dx = d.x - this.diameter/2;
         const theta = Math.atan2(dy,dx);

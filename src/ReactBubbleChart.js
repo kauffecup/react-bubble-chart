@@ -29,7 +29,7 @@ import ReactDOM           from 'react-dom';
 //    colorValue: number, // used to determine color
 //    selected: boolean,  // if true will use selectedColor/selectedTextColor for circle/text
 // }
-// 
+//
 // Can also be a nested JSON object if you want a nested bubble chart. That would look like:
 // {
 //   _id: string,
@@ -117,6 +117,18 @@ import ReactDOM           from 'react-dom';
 // legendSpacing
 // The number of pixels between blocks in the legend
 
+// fontSizeFactor
+// A multiplier used to determine a bubble's font-size as a function of its radius.
+// If not specified, the font-sizes depend on CSS styles for large, medium, and small classes, or 1em by default.
+
+// duration
+// Determines the length of time (in milliseconds) it takes for each bubble's transition animation to complete.
+// defaults to 500 ms; can set to zero
+
+// delay
+// Staggers the transition between each bubble element.
+// defaults to 7 ms
+
 // for more info, see the README
 
 class ReactBubbleChart extends React.Component {
@@ -158,7 +170,10 @@ class ReactBubbleChart extends React.Component {
       legend: this.props.legend,
       tooltip: this.props.tooltip,
       tooltipProps: this.props.tooltipProps,
-      tooltipFunc: this.props.tooltipFunc
+      tooltipFunc: this.props.tooltipFunc,
+      fontSizeFactor: this.props.fontSizeFactor,
+      duration: this.props.duration,
+      delay: this.props.delay
     }
   }
 

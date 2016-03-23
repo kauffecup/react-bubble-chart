@@ -250,10 +250,38 @@ defaults to 40
 Can pass a number below which the label div will have the `medium` class added,
 and above which the `large` class will be added. Defaults to 115.
 
-### legendSpacing (optional)
+### `legendSpacing` (optional)
 
 Can specify the number of pixels between the blocks in the legend. Defaults
 to 3.
+
+### `fontSizeFactor` (optional)
+
+Can pass a multiplier used to calculate the font-size of each text label.
+
+If provided, each bubble's font size will be a function of its radius (i.e., a radius is multiplied by the fontSizeFactor to determine a pixel-unit font-size).
+
+If not specified, the font-sizes will depend on the normal CSS styles for the `large`, `medium`, and `small` classes.
+
+If the size classes are ommitted in the stylesheet, the font-size defaults to 1em.
+
+*Example:* ` <ReactBubbleChart fontSizeFactor={0.5} />`
+
+<img width="100%" alt="fontSizeFactor Example" src="assets/fontSizeFactor.png">
+
+### `duration` (optional)
+
+Can pass the length of time (in milliseconds) it takes for each bubble's transition animation to complete.
+
+Defaults to 500 ms and can be set to zero. Zeroing out the transition length can reduce jitteriness.
+
+### `delay` (optional)
+
+Can pass a length of time (in milliseconds) used to stagger the start of each transition animation between every bubble element.
+
+Defaults to 7 ms and can be set to zero. Zeroing out the transition staggers can reduce jitteriness.
+
+*Example:* ` <ReactBubbleChart fontSizeFactor={0.5} />`
 
 ## Implementation Inspiration (credit where credit is due).
 
