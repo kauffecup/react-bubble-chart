@@ -29,7 +29,7 @@ import ReactDOM           from 'react-dom';
 //    colorValue: number, // used to determine color
 //    selected: boolean,  // if true will use selectedColor/selectedTextColor for circle/text
 // }
-// 
+//
 // Can also be a nested JSON object if you want a nested bubble chart. That would look like:
 // {
 //   _id: string,
@@ -158,7 +158,10 @@ class ReactBubbleChart extends React.Component {
       legend: this.props.legend,
       tooltip: this.props.tooltip,
       tooltipProps: this.props.tooltipProps,
-      tooltipFunc: this.props.tooltipFunc
+      tooltipFunc: this.props.tooltipFunc,
+      fontSizeFactor: this.props.fontSizeFactor,
+      duration: this.props.duration,
+      delay: this.props.delay
     }
   }
 
