@@ -255,6 +255,20 @@ and above which the `large` class will be added. Defaults to 115.
 Can specify the number of pixels between the blocks in the legend. Defaults
 to 3.
 
+### fontSizeFactor (optional)
+
+Can pass a multiplier used to calculate the font-size of each text label. If provided, each bubble's font size will be a function of its radius (i.e., a radius is multiplied by the fontSizeFactor to determine a pixel-unit font-size).
+
+If not specified, the font-sizes will depend on the normal CSS styles for the `large`, `medium`, and `small` classes, or 1em by default (if size classes are not defined).
+
+### duration (optional)
+
+Can pass the length of time (in milliseconds) it takes for each bubble's transition animation to complete. Defaults to 500 ms and can be set to zero. Zeroing out the transition length can reduce jitteriness.
+
+### delay (optional)
+
+Can pass a length of time (in milliseconds) used to stagger the start of each transition animation between every bubble element. Defaults to 7 ms and can be set to zero. Zeroing out the transition staggers can reduce jitteriness.
+
 ## Implementation Inspiration (credit where credit is due).
 
 ### React+D3
