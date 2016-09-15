@@ -15,6 +15,7 @@
 //------------------------------------------------------------------------------
 
 import d3 from 'd3';
+import ReactDOM from 'react-dom';
 
 /**
  * Properties defined during construction:
@@ -276,7 +277,13 @@ export default class ReactBubbleChartD3 {
           else size = 'large';
           return 'bubble-label ' + size
         })
-        .text(d => d.displayText || d._id)
+        .each(function(d){
+          if (typeof d.displayText === 'object') {
+            ReactDOM.render(d.displayText, this);
+          } else {
+            d3.select(this).text(() => d.displayText || d._id);
+          }
+        })
         .on('click', (d, i) => {d3.event.stopPropagation(); props.onClick(d)})
         .on('mouseover', this._tooltipMouseOver.bind(this, color, el))
         .on('mouseout', this._tooltipMouseOut.bind(this))
