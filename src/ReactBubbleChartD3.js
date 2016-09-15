@@ -281,7 +281,7 @@ export default class ReactBubbleChartD3 {
           if (typeof d.displayText === 'object') {
             ReactDOM.render(d.displayText, this);
           } else {
-            d3.select(this).text(d.displayText);
+            d3.select(this).text(() => d.displayText || d._id);
           }
         })
         .on('click', (d, i) => {d3.event.stopPropagation(); props.onClick(d)})
