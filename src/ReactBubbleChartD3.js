@@ -269,13 +269,20 @@ export default class ReactBubbleChartD3 {
         .attr('r', d => d.r)
         .style('opacity', 1);
       // intialize new labels
-      var newLabels = labels.enter().append('div')
+      labels.enter().append('div')
         .attr('class', d => {
           var size;
           if (2*d.r < this.smallDiameter) size = 'small';
           else if (2*d.r < this.mediumDiameter) size = 'medium';
           else size = 'large';
           return 'bubble-label ' + size
+        })
+        .each(function(d){
+          if (typeof d.displayText === 'object') {
+            ReactDOM.render(d.displayText, this);
+          } else {
+            d3.select(this).text(d.displayText);
+          }
         })
         .on('click', (d, i) => {d3.event.stopPropagation(); props.onClick(d)})
         .on('mouseover', this._tooltipMouseOver.bind(this, color, el))
@@ -286,20 +293,12 @@ export default class ReactBubbleChartD3 {
         .style('left', d =>  d.x - d.r + 'px')
         .style('top', d =>  d.y - d.r + 'px')
         .style('color', d => d.selected ? this.selectedTextColor : textColor(d.colorValue))
-        .style('opacity', 0);
-
-      newLabels.transition()
+        .style('opacity', 0)
+        .transition()
         .duration(duration * 1.2)
         .style('opacity', 1)
         .style('font-size', d => fontFactor ? fontFactor *  d.r + 'px' : null);
 
-      newLabels.each(function(d){
-        if (typeof d.displayText === 'object') {
-          ReactDOM.render(d.displayText, this);
-        } else {
-          d3.select(this).text(d.displayText);
-        }
-      });
     }
 
     // exit - only applies to... exiting elements
