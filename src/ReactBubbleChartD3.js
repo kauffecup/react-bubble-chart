@@ -36,6 +36,10 @@ import d3 from 'd3';
  *   duration
  *   delay
  */
+
+var setWidth = 300;
+var setHeight = 300;
+
 export default class ReactBubbleChartD3 {
   constructor(el, props = {}) {
     this.legendSpacing = typeof props.legendSpacing === 'number' ? props.legendSpacing : 3;
@@ -49,7 +53,7 @@ export default class ReactBubbleChartD3 {
 
     // create an <svg> and <html> element - store a reference to it for later
     this.svg = d3.select(el).append('svg')
-      .attr('class', 'bubble-chart-d3')
+      .attr({className:'bubble-chart-d3', width: setWidth, height: setHeight})
       .style('overflow', 'visible');
     this.html = d3.select(el).append('div')
       .attr('class', 'bubble-chart-text')
@@ -58,10 +62,11 @@ export default class ReactBubbleChartD3 {
       .style('right', 0)
       .style('margin-left', 'auto')
       .style('margin-right', 'auto');
-    this.legend = d3.select(el).append('svg')
-      .attr('class', 'bubble-legend')
-      .style('overflow', 'visible')
-      .style('position', 'absolute');
+    this.legend = d3.select(el)
+      //.append('svg')
+      //.attr('class', 'bubble-legend')
+      //.style('overflow', 'visible')
+      //.style('position', 'absolute');
     this.tooltip = this.html.append('div')
       .attr('class', 'tooltip')
       .style('position', 'absolute')
