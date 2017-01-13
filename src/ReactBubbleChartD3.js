@@ -38,7 +38,7 @@ import d3 from 'd3';
  */
 
 var setWidth = 300;
-var setHeight = 500;
+var setHeight = 300;
 
 export default class ReactBubbleChartD3 {
   constructor(el, props = {}) {
