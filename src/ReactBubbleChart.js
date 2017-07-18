@@ -152,7 +152,10 @@ class ReactBubbleChart extends React.Component {
 
   /** When we update, update our friend, the bubble chart */
   componentDidUpdate() {
-    this.bubbleChart.update(this.getDOMNode(), this.getChartState());
+    // Apparently updates can happen before a mount, so deal with this scenario
+    if (this.bubbleChart) {
+       this.bubbleChart.update(this.getDOMNode(), this.getChartState());
+    }
   }
 
   /** Define what props get passed down to the d3 chart */
