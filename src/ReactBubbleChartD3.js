@@ -14,7 +14,7 @@
 // limitations under the License.
 //------------------------------------------------------------------------------
 
-import d3 from 'd3';
+import * as d3 from "d3";
 
 /**
  * Properties defined during construction:
