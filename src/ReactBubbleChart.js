@@ -14,9 +14,9 @@
 // limitations under the License.
 //------------------------------------------------------------------------------
 
-import ReactBubbleChartD3 from './ReactBubbleChartD3';
 import React              from 'react';
 import ReactDOM           from 'react-dom';
+import ReactBubbleChartD3 from './ReactBubbleChartD3';
 
 // Description of props!
 
@@ -130,6 +130,7 @@ import ReactDOM           from 'react-dom';
 // defaults to 7 ms
 
 // for more info, see the README
+const noOp = () => {}
 
 class ReactBubbleChart extends React.Component {
   constructor(props) {
@@ -163,7 +164,7 @@ class ReactBubbleChart extends React.Component {
       fixedDomain: this.props.fixedDomain,
       selectedColor: this.props.selectedColor,
       selectedTextColor: this.props.selectedTextColor,
-      onClick: this.props.onClick || () => {},
+      onClick: this.props.onClick || noOp,
       smallDiameter: this.props.smallDiameter,
       mediumDiameter: this.props.mediumDiameter,
       legendSpacing: this.props.legendSpacing,

@@ -8,7 +8,7 @@
     "react": "^0.13.3"
   },
   "peerDependencies": {
-    "d3": ">=3.5.x",
+    "d3": "^4.10.0",
     "react": ">=0.14.x",
     "react-dom": ">=0.14.x"
   },
